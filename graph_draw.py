@@ -1,22 +1,28 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# <default>
 import sys
-import numpy as np
+
+# <third party>
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
 
 # グラフ描画
-def graph_draw(g: nx.MultiDiGraph):
-    pos = nx.spring_layout(g, k=0.7)
+def graph_draw(graph: nx.MultiDiGraph):
+    pos = nx.spring_layout(graph, k=0.7)
 
     # 重みを数値だけにする
-    for i, j ,w in g.edges(data=True):
-        # 表示をなくすために書き換え
-        if w['weight'] == 0:
-            w['weight'] = ""
+    for _from, _to , _weight in graph.edges(data=True):
+        # 重みがない時は表示しない
+        if _weight.get('weight') != None:
+            edge_labels = {(_from, _to): _weight['weight']}
+            nx.draw_networkx_edge_labels(graph, pos, edge_labels = edge_labels)
+        else:
+            nx.draw_networkx_edges(graph, pos)
 
-        edge_labels = {(i, j): w['weight']}
-        nx.draw_networkx_edge_labels(g, pos, edge_labels = edge_labels)
-
-    nx.draw_networkx(g, pos)
+    nx.draw_networkx(graph, pos)
 
     # 辺が重ならないようにしたり、枠をなくしたり
     plt.tight_layout()
@@ -24,30 +30,26 @@ def graph_draw(g: nx.MultiDiGraph):
     plt.show()
 
 if __name__ == '__main__':
-    flg = True  # エラーチェック
-    G = nx.MultiDiGraph()
+    mdgraph = nx.MultiDiGraph()
+    num = int(input())
 
-    for i in range(int(input())):
-        weighted = False
-        data = input()
-        data_group = data.split(" ")
-        from_ = to_ = weight_ = 0
+    for i in range(num):
+        edge_info = input().split(" ")
+        from_ = int(edge_info[0])
+        to_ = int(edge_info[1])
+        weight_ = 0
 
         # 入力の確認
-        if len(data_group) == 2:
-            from_ = int(data_group[0])
-            to_ = int(data_group[1])
-        elif len(data_group) == 3:
-            from_ = int(data_group[0])
-            to_ = int(data_group[1])
-            weight_ = int(data_group[2])
-        else:
+        if len(edge_info) != 3 and len(edge_info) != 2:
             print("Args Error")
-            flg = False
-            break
+            sys.exit()
+        elif len(edge_info) == 3 :
+            weight_ = int(edge_info[2])
 
         # 重み付きの辺を追加
-        G.add_weighted_edges_from([(from_, to_, weight_)])
+        if weight_ != 0:
+            mdgraph.add_weighted_edges_from([(from_, to_, weight_)])
+        else:
+            mdgraph.add_edges_from([(from_, to_)])
 
-    if flg == True:
-       graph_draw(G)
+    graph_draw(mdgraph)
