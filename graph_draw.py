@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# <default>
 import sys
 
-# <third party>
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
