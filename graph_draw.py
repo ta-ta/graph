@@ -12,10 +12,10 @@ def graph_draw(graph: nx.MultiDiGraph):
     pos = nx.spring_layout(graph, k=0.7)
 
     # 重みを数値だけにする
-    for _from, _to , _weight in graph.edges(data=True):
+    for from_, to_ , weight_ in graph.edges(data=True):
         # 重みがない時は表示しない
-        if _weight.get('weight') != None:
-            edge_labels = {(_from, _to): _weight['weight']}
+        if weight_.get('weight') != None:
+            edge_labels = {(from_, to_): weight_['weight']}
             nx.draw_networkx_edge_labels(graph, pos, edge_labels = edge_labels)
         else:
             nx.draw_networkx_edges(graph, pos)
