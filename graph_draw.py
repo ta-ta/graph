@@ -15,14 +15,6 @@ WEIGHTED = False
 def graph_draw(graph: nx.MultiDiGraph):
     pos = nx.spring_layout(graph, k = 0.7)
 
-    for from_, to_, weight_ in graph.edges(data = True):
-        # 重みあり
-        if WEIGHTED == True:
-            edge_labels = {(from_, to_): weight_['weight']}
-            nx.draw_networkx_edge_labels(graph, pos, edge_labels = edge_labels)
-        else:
-            nx.draw_networkx_edges(graph, pos)
-
     nx.draw_networkx(graph, pos)
 
     ag = nx.nx_agraph.to_agraph(graph)
@@ -70,13 +62,15 @@ if __name__ == '__main__':
             
             for i in range(nodes - 1):
                 edge_info = f.readline().split(' ')
-                # 始点、終点、重み
-                from_ = int(edge_info[0])
-                to_ = int(edge_info[1])
+                edges = [int(e_i) for e_i in edge_info]
+
+                # 始点、終点
+                from_ = edges[0]
+                to_ = edges[1]
 
                 # 重みあり
                 if WEIGHTED == True:
-                    weight_ = int(edge_info[2])
+                    weight_ = edges[2]
                     # 辺を追加
                     m_graph.add_edges_from([(from_, to_, {"label": weight_})])
                 else:
@@ -86,6 +80,7 @@ if __name__ == '__main__':
         # マトリックス
         if format_ == 'matrix':
             print('matrix')
+            exit()
         # 枝リスト
         else:
             for i in range(int(input())):
@@ -96,10 +91,10 @@ if __name__ == '__main__':
                 from_ = edges[0]
                 to_ = edges[1]
 
-                # 重み付きの辺を追加
+                # 重みあり
                 if WEIGHTED == True:
                     weight_ = edges[2]
-                    m_graph.add_weighted_edges_from([(from_, to_, weight_)])
+                    m_graph.add_edges_from([(from_, to_, {'label': weight_})])
                 else:
                     m_graph.add_edges_from([(from_, to_)])
 
