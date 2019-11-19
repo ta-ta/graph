@@ -13,7 +13,7 @@ WEIGHTED = False
 
 # グラフ描画
 def graph_draw(graph: nx.MultiDiGraph):
-    pos = nx.spring_layout(graph, k = 0.7)
+    pos = nx.spring_layout(graph)
 
     nx.draw_networkx(graph, pos)
 
