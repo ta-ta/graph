@@ -13,7 +13,15 @@ WEIGHTED = False
 
 # グラフ描画
 def graph_draw(graph: nx.MultiDiGraph):
-    pos = nx.spring_layout(graph)
+    pos = nx.spring_layout(graph, k = 0.7)
+
+    for from_, to_, weight_ in graph.edges(data = True):
+        # 重みあり
+        if WEIGHTED == True:
+            edge_labels = {(from_, to_): weight_['weight']}
+            nx.draw_networkx_edge_labels(graph, pos, edge_labels = edge_labels)
+        else:
+            nx.draw_networkx_edges(graph, pos)
 
     nx.draw_networkx(graph, pos)
 
@@ -36,7 +44,6 @@ if __name__ == '__main__':
     parser.add_argument('--file', help='problem file', type=str)
     parser.add_argument('-w', '--weighted', help='Existence of weight(def:None)', action='store_true')
     parser.add_argument('-f', '--format', help='Input format is edges or matrix(def:edges)', default='edges', type=str)
-    parser.add_argument('-i', '--indexed', help='0-indexed or 1-indexed(def:1)', default=1, type=int)
     parser.add_argument('-d', '--directed', help='Directed or UnDirected(def:Undirected)', action='store_true')
     parser.add_argument('-t', '--index_transform', help='1-indexed transform 0-indexed(def:No)', action='store_true')
 
@@ -45,7 +52,6 @@ if __name__ == '__main__':
 
     WEIGHTED = args.weighted
     format_ = args.format
-    index_ = args.indexed
     directed_ = args.directed
     indexed_ = args.index_transform
 
@@ -80,31 +86,22 @@ if __name__ == '__main__':
         # マトリックス
         if format_ == 'matrix':
             print('matrix')
+        # 枝リスト
         else:
-            print('edges')
+            for i in range(int(input())):
+                edge_info = input().split(' ')
+                edges = [int(e_i) for e_i in edge_info]
+                
+                # 始点、終点
+                from_ = edges[0]
+                to_ = edges[1]
 
-        exit()
-        # 未対応です
-        '''
-        for i in range(num):
-            edge_info = input().split(" ")
-            from_ = int(edge_info[0])
-            to_ = int(edge_info[1])
-            weight_ = 0
-
-            # 入力の確認
-            if len(edge_info) != 3 and len(edge_info) != 2:
-                print("Args Error")
-                sys.exit()
-            elif len(edge_info) == 3 :
-                weight_ = int(edge_info[2])
-
-            # 重み付きの辺を追加
-            if weight_ != 0:
-                mdgraph.add_weighted_edges_from([(from_, to_, weight_)])
-            else:
-                mdgraph.add_edges_from([(from_, to_)])
-        '''
+                # 重み付きの辺を追加
+                if WEIGHTED == True:
+                    weight_ = edges[2]
+                    m_graph.add_weighted_edges_from([(from_, to_, weight_)])
+                else:
+                    m_graph.add_edges_from([(from_, to_)])
 
     # グラフ描画
     graph_draw(m_graph)
