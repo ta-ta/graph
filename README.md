@@ -5,7 +5,7 @@ how to ...
 
 --- 
 
-(@qoo8694)[https://github.com/qoo8694/] にもご協力いただきました。
+[@qoo8694](https://github.com/qoo8694/) にもご協力いただきました。
 
 ---
 
